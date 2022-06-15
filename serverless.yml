@@ -1,0 +1,33 @@
+app: wordle
+org: skynnes
+service: docker-selenium-lambda
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'prod'}
+  region: ${env:AWS_REGION, 'us-east-1'}
+  profile: personal
+  ecr:
+    images:
+      img:
+        path: ./
+        platform: linux/amd64
+
+functions:
+  demo:
+    timeout: 240
+    memorySize: 2048
+    image:
+      name: img
+    environment:
+      GROUPME_BOT_ID: ${param:GROUPME_BOT_ID}
+    events:
+      - schedule:
+          rate:
+            - cron(9 13 ? * MON *)
+            - cron(27 10 ? * TUE *)
+            - cron(45 14 ? * WED *)
+            - cron(17 8 ? * THU *)
+            - cron(31 17 ? * FRI *)
+            - cron(55 9 ? * SAT *)
+            - cron(12 11 ? * SUN *)
